@@ -82,13 +82,19 @@ export function SiteSidebar({ expanded, onToggle }: Props) {
         <ToggleButton expanded={expanded} onClick={onToggle} />
 
         {sidebarGroups.map((group, gi) => (
-          <div
-            key={group.title ?? `g-${gi}`}
-            className={expanded ? (gi === 0 ? "mt-2" : "mt-4") : "mt-0"}
-          >
+          <div key={group.title ?? `g-${gi}`}>
+            {gi > 0 ? (
+              /* Standalone full-width hairline between groups — shows in both states */
+              <div
+                className="my-2 h-px bg-white/[0.08]"
+                aria-hidden
+              />
+            ) : (
+              <div className={expanded ? "h-2" : "h-1"} aria-hidden />
+            )}
             {group.title ? (
               <div
-                className={`flex h-5 items-center gap-2 overflow-hidden pl-2 transition-all duration-200 ease-out ${
+                className={`flex h-5 items-center overflow-hidden pl-2 transition-all duration-200 ease-out ${
                   expanded ? "mb-2 max-h-5 opacity-100" : "mb-0 max-h-0 opacity-0"
                 }`}
                 aria-hidden={!expanded}
@@ -96,7 +102,6 @@ export function SiteSidebar({ expanded, onToggle }: Props) {
                 <span className="ui-text-label shrink-0 whitespace-nowrap text-[#6f7273]">
                   {group.title}
                 </span>
-                <span className="h-px min-w-0 flex-1 bg-white/[0.08]" aria-hidden />
               </div>
             ) : null}
             <nav className="flex flex-col gap-1">
@@ -108,6 +113,7 @@ export function SiteSidebar({ expanded, onToggle }: Props) {
         ))}
 
         <div className="mt-auto">
+          <div className="mb-2 mt-3 h-px bg-white/[0.08]" aria-hidden />
           {isAuthed() ? (
             <button
               type="button"
