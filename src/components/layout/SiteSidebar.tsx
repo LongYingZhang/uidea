@@ -70,10 +70,15 @@ export function SiteSidebar({ expanded, onToggle }: Props) {
 
   return (
     <aside
-      className="fixed bottom-0 left-0 top-0 z-40 flex flex-col overflow-x-hidden border-r border-[#1f1f1f] bg-[#0e0e0e] transition-[width] duration-200 ease-out"
+      className="fixed bottom-0 left-0 top-0 z-40 flex flex-col overflow-x-hidden bg-[#0e0e0e] transition-[width] duration-200 ease-out"
       style={{ width }}
       aria-label="侧边导航"
     >
+      {/* Right-edge hairline: starts below the top-left corner radius, runs to the bottom */}
+      <span
+        className="pointer-events-none absolute bottom-0 right-0 top-4 w-px bg-[#1f1f1f]"
+        aria-hidden
+      />
       {/* One pad shell: same 8px inset for logo / nav / login chips */}
       <div
         className="flex flex-1 flex-col gap-1 overflow-y-auto overflow-x-hidden p-2"
