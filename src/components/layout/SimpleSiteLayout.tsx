@@ -20,7 +20,7 @@ export function SimpleSiteLayout() {
       >
         {/* Sidebar hairline bends into the content edge with a rounded corner */}
         <span
-          className="pointer-events-none absolute top-0 z-50 h-4 w-4 rounded-tl-[16px] border-l border-t border-[#1f1f1f] transition-[left] duration-200 ease-out"
+          className="pointer-events-none absolute top-0 z-[45] h-4 w-4 rounded-tl-[16px] border-l border-t border-[#1f1f1f] transition-[left] duration-200 ease-out"
           style={{ left: padLeft - 1 }}
           aria-hidden
         />
