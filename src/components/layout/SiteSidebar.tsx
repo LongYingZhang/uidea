@@ -73,7 +73,7 @@ export function SiteSidebar({ expanded, onToggle }: Props) {
       {/* Corner: the sidebar hairline bends into the content edge with a 16px radius.
           Fixed + outside the aside so the aside's overflow clipping can't trim it. */}
       <span
-        className="pointer-events-none fixed top-0 z-[45] h-4 w-4 rounded-tl-[16px] border-l border-t border-[#1f1f1f] transition-[left] duration-200 ease-out"
+        className="pointer-events-none fixed top-2 z-[45] h-4 w-4 rounded-tl-[16px] border-l border-t border-[#1f1f1f] transition-[left] duration-200 ease-out"
         style={{ left: width - 1 }}
         aria-hidden
       />
@@ -84,7 +84,7 @@ export function SiteSidebar({ expanded, onToggle }: Props) {
       >
         {/* Right-edge hairline: starts below the top-left corner radius, runs to the bottom */}
         <span
-          className="pointer-events-none absolute bottom-0 right-0 top-4 w-px bg-[#1f1f1f]"
+          className="pointer-events-none absolute bottom-0 right-0 top-6 w-px bg-[#1f1f1f]"
           aria-hidden
         />
       {/* One pad shell: same 8px inset for logo / nav / login chips */}
