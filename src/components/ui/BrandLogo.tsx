@@ -6,7 +6,7 @@ type Props = {
 export function BrandLogo({ className = "h-8 w-auto" }: Props) {
   return (
     <img
-      src="/uidea-logo.png?v=2"
+      src="uidea-logo.png?v=2"
       alt="Uidea"
       width={50}
       height={42}
