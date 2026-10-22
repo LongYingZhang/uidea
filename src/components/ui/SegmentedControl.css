@@ -1,0 +1,53 @@
+/* 待确认收款样式：无外框底、单项圆角约 9px、选中项白底 */
+.seg-soft {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.seg-soft .seg-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 9px;
+  font-size: 13px;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  background: transparent;
+}
+
+.seg-soft .seg-item:hover {
+  color: var(--text);
+}
+
+.seg-soft .seg-item.is-active {
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* 导航外壳约 8px，内项约 5px */
+.seg-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  background: var(--bg-muted);
+  border-radius: var(--radius-nav);
+}
+
+.seg-nav .seg-item {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: var(--radius-xs);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.seg-nav .seg-item.is-active {
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-weight: 500;
+}

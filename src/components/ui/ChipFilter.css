@@ -1,0 +1,24 @@
+.chip-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip-filter-item {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: var(--bg-muted);
+}
+
+.chip-filter-item:hover {
+  color: var(--text);
+}
+
+.chip-filter-item.is-active {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 500;
+}
