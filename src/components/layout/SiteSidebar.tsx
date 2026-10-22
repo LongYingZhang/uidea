@@ -89,11 +89,13 @@ export function SiteSidebar({ expanded, onToggle }: Props) {
         {sidebarGroups.map((group, gi) => (
           <div key={group.title ?? `g-${gi}`}>
             {gi > 0 ? (
-              /* Standalone full-width hairline between groups — shows in both states */
-              <div
-                className="my-2 h-px bg-white/[0.08]"
-                aria-hidden
-              />
+              /* Collapsed: short hairline that stops short of the right edge.
+                 Expanded: the group title itself carries the trailing line (below). */
+              expanded ? (
+                <div className="h-2" aria-hidden />
+              ) : (
+                <div className="my-2 h-px w-9 bg-white/[0.08]" aria-hidden />
+              )
             ) : (
               <div className={expanded ? "h-2" : "h-1"} aria-hidden />
             )}
@@ -107,6 +109,10 @@ export function SiteSidebar({ expanded, onToggle }: Props) {
                 <span className="ui-text-label shrink-0 whitespace-nowrap text-[#6f7273]">
                   {group.title}
                 </span>
+                {gi > 0 ? (
+                  /* "PAYMENTS ————" style: line runs from the label to the right */
+                  <span className="ml-2 h-px min-w-0 flex-1 bg-white/[0.08]" aria-hidden />
+                ) : null}
               </div>
             ) : null}
             <nav className="flex flex-col gap-1">
@@ -118,7 +124,10 @@ export function SiteSidebar({ expanded, onToggle }: Props) {
         ))}
 
         <div className="mt-auto">
-          <div className="mb-2 mt-3 h-px bg-white/[0.08]" aria-hidden />
+          <div
+            className={`mb-2 mt-3 h-px bg-white/[0.08] ${expanded ? "w-full" : "w-9"}`}
+            aria-hidden
+          />
           {isAuthed() ? (
             <button
               type="button"
