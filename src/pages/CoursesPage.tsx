@@ -143,14 +143,10 @@ export function CoursesPage() {
 
 function CourseCard({ course }: { course: Course }) {
   return (
-    <Link to={`/courses/${course.id}`} className="ui-card group flex h-full flex-col gap-2">
+    <Link to={`/courses/${course.id}`} className="ui-card flex h-full flex-col gap-2">
       {/* Cover — same inset as text; all sides = card pad */}
       <div className="uidea-media relative overflow-hidden rounded-[8px] bg-[#0e0e0e]">
-        <img
-          src={course.cover}
-          alt=""
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-        />
+        <img src={course.cover} alt="" className="h-full w-full object-cover" />
         <span className="ui-text-label absolute right-1.5 top-1.5 rounded-[6px] bg-[#131313]/80 px-1.5 py-0.5 text-white backdrop-blur-[2px]">
           {course.levelLabel}
         </span>

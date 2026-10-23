@@ -14,7 +14,7 @@ export function AuthLayout() {
     <div className="min-h-screen w-full max-w-[100vw] overflow-x-clip bg-[#131313] text-white">
       <SiteSidebar expanded={expanded} onToggle={toggle} />
       <main
-        className="min-h-screen w-full bg-[#131313] transition-[padding] duration-200 ease-out"
+        className="min-h-screen w-full bg-[#131313] pt-[calc(var(--spacing-margin)_-_0.5rem)] transition-[padding] duration-200 ease-out"
         style={{ paddingLeft: padLeft }}
       >
         <Outlet />

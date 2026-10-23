@@ -32,7 +32,7 @@ export function DesignerHomePage() {
           <button type="button" className="ui-btn ui-btn-primary">
             关注
           </button>
-          <Link to="/console/messages" className="ui-btn bg-[#2a2a2a] text-white hover:bg-[#333]">
+          <Link to="/messages" className="ui-btn bg-[#2a2a2a] text-white hover:bg-[#333]">
             私信
           </Link>
         </div>
@@ -69,7 +69,7 @@ export function DesignerHomePage() {
           <Link
             key={w.id}
             to={`/works/${w.id}`}
-            className="uidea-media group relative overflow-hidden rounded-[16px] bg-[#0e0e0e]"
+            className="uidea-media group relative overflow-hidden rounded-[10px] bg-[#0e0e0e]"
           >
             <div className="absolute inset-0" style={{ background: w.cover }} aria-hidden />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-[var(--uidea-card-pad)]">

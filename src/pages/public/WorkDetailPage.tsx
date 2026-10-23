@@ -18,7 +18,7 @@ export function WorkDetailPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div>
           <div
-            className="uidea-media overflow-hidden rounded-[16px] bg-[#0e0e0e]"
+            className="uidea-media overflow-hidden rounded-[10px] bg-[#0e0e0e]"
             style={cover ? { background: cover } : undefined}
           >
             {work.cover.startsWith("/") ? (
@@ -44,7 +44,7 @@ export function WorkDetailPage() {
         </div>
 
         <aside className="flex flex-col gap-4">
-          <div className="rounded-[16px] bg-[#1c1b1b] p-4">
+          <div className="rounded-[10px] bg-[#1c1b1b] p-4">
             <div className="flex items-center gap-3">
               <span className="ui-text-body flex h-10 w-10 items-center justify-center rounded-full bg-[#3a3a3a] font-medium text-white">
                 {work.author.replace("@", "").slice(0, 1).toUpperCase()}
@@ -85,7 +85,7 @@ export function WorkDetailPage() {
             </Link>
           </div>
 
-          <div className="ui-text-label rounded-[16px] bg-[#141414] p-4 text-[#5f6364]">
+          <div className="ui-text-label rounded-[10px] bg-[#141414] p-4 text-[#5f6364]">
             作品 ID {work.id} · 原型数据，非真实作品
           </div>
         </aside>
@@ -99,7 +99,7 @@ export function WorkDetailPage() {
               <Link
                 key={w.id}
                 to={`/works/${w.id}`}
-                className="uidea-media group relative overflow-hidden rounded-[16px] bg-[#0e0e0e]"
+                className="uidea-media group relative overflow-hidden rounded-[10px] bg-[#0e0e0e]"
               >
                 <div className="absolute inset-0" style={{ background: w.cover }} aria-hidden />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-[var(--uidea-card-pad)]">

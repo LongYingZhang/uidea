@@ -107,7 +107,7 @@ export function TaskDetailPage() {
           </ul>
         </div>
 
-        <aside className="h-fit rounded-[16px] bg-[#1c1b1b] p-4 lg:sticky lg:top-6">
+        <aside className="h-fit rounded-[10px] bg-[#1c1b1b] p-4 lg:sticky lg:top-6">
           <div className="font-['Space_Mono'] text-[24px] leading-none text-white">{task.price}</div>
           <div className="ui-text-meta mt-1 text-[#8a8a8a]">预算区间，可沟通</div>
 

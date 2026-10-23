@@ -20,7 +20,7 @@ export function CourseLearnPage() {
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div>
           <div
-            className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-[16px] bg-[#0e0e0e]"
+            className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-[10px] bg-[#0e0e0e]"
             style={{ background: chapter.done ? course.cover : "#0e0e0e" }}
           >
             <button
@@ -61,7 +61,7 @@ export function CourseLearnPage() {
           </div>
         </div>
 
-        <aside className="h-fit rounded-[16px] bg-[#1c1b1b] p-3">
+        <aside className="h-fit rounded-[10px] bg-[#1c1b1b] p-3">
           <div className="ui-text-label px-2 pb-2 text-[#747778]">课程目录</div>
           <ol className="m-0 flex list-none flex-col gap-1 p-0">
             {course.chapters.map((ch, i) => {

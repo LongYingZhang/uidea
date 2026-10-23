@@ -23,7 +23,7 @@ export function CompetitionTopicPage() {
         ← 返回大赛列表
       </Link>
 
-      <section className="relative mt-5 overflow-hidden rounded-[16px]" style={{ background: comp.cover }}>
+      <section className="relative mt-5 overflow-hidden rounded-[10px]" style={{ background: comp.cover }}>
         <div className="relative aspect-[21/9] w-full bg-black/25">
           <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-8">
             <span className="ui-text-label w-fit rounded-[6px] bg-white px-2 py-1 text-[#121212]">
@@ -60,7 +60,7 @@ export function CompetitionTopicPage() {
           <h2 className="ui-text-body mt-6 mb-3 font-medium text-white">奖项设置</h2>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             {awards.map((a) => (
-              <div key={a.name} className="rounded-[16px] bg-[#1c1b1b] p-4">
+              <div key={a.name} className="rounded-[10px] bg-[#1c1b1b] p-4">
                 <div className="ui-text-meta text-[#8a8a8a]">{a.name}</div>
                 <div className="mt-1 font-['Space_Mono'] text-[18px] text-white">{a.prize}</div>
                 <div className="ui-text-label mt-0.5 text-[#5f6364]">{a.count} 名</div>
@@ -69,7 +69,7 @@ export function CompetitionTopicPage() {
           </div>
         </div>
 
-        <aside className="h-fit rounded-[16px] bg-[#1c1b1b] p-4 lg:sticky lg:top-6">
+        <aside className="h-fit rounded-[10px] bg-[#1c1b1b] p-4 lg:sticky lg:top-6">
           <div className="font-['Space_Mono'] text-[24px] leading-none text-white">{comp.prize}</div>
           <div className="ui-text-meta mt-1 text-[#8a8a8a]">总奖池</div>
 

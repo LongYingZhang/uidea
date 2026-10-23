@@ -2,18 +2,13 @@ import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import { StitchHost } from "./components/StitchHost";
 import { RequireAuth } from "./components/auth/RequireAuth";
 import { AuthLayout } from "./components/layout/AuthLayout";
-import { ConsoleLayout } from "./components/layout/ConsoleLayout";
 import { PublicLayout } from "./components/layout/PublicLayout";
 import { SimpleSiteLayout } from "./components/layout/SimpleSiteLayout";
 import { EnterpriseRegisterPage } from "./pages/auth/EnterpriseRegisterPage";
 import { LoginPage } from "./pages/auth/LoginPage";
 import { RegisterPage } from "./pages/auth/RegisterPage";
-import { AccountPage } from "./pages/console/AccountPage";
-import { ConsoleCoursesPage } from "./pages/console/ConsoleCoursesPage";
 import { ConsoleMessagesPage } from "./pages/console/ConsoleMessagesPage";
 import { ConsoleNotificationsPage } from "./pages/console/ConsoleNotificationsPage";
-import { ConsoleTasksPage } from "./pages/console/ConsoleTasksPage";
-import { ConsoleWorksPage } from "./pages/console/ConsoleWorksPage";
 import { ProfilePage } from "./pages/console/ProfilePage";
 import { CoursesPage } from "./pages/CoursesPage";
 import { DesignersPage } from "./pages/DesignersPage";
@@ -72,16 +67,7 @@ export default function App() {
             />
           </Route>
 
-          <Route path="console" element={<RequireAuth><ConsoleLayout /></RequireAuth>}>
-            <Route index element={<Navigate to="profile" replace />} />
-            <Route path="profile" element={<ProfilePage />} />
-            <Route path="account" element={<AccountPage />} />
-            <Route path="works" element={<ConsoleWorksPage />} />
-            <Route path="courses" element={<ConsoleCoursesPage />} />
-            <Route path="tasks" element={<ConsoleTasksPage />} />
-            <Route path="notifications" element={<ConsoleNotificationsPage />} />
-            <Route path="messages" element={<ConsoleMessagesPage />} />
-          </Route>
+          <Route path="console/*" element={<Navigate to="/" replace />} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

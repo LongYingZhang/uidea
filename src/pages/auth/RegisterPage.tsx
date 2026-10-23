@@ -17,7 +17,7 @@ export function RegisterPage() {
       return;
     }
     localStorage.setItem("uidea.user", form.email.trim());
-    navigate("/console/profile");
+    navigate("/");
   };
 
   return (

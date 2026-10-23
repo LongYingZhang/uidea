@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Field, inputClass } from "../../components/ui/AdminUi";
 import { works, courses, tasks } from "../../data/mock";
@@ -15,18 +15,20 @@ type Profile = {
   social: string;
   joined: string;
   available: boolean;
+  orders: number;
 };
 
 const initialProfile: Profile = {
   name: "Longying Zhang",
   handle: "longying_zhang",
-  title: "视觉设计师 / 影像创作",
+  title: "AI视觉设计品牌创意",
   city: "杭州，中国",
   bio: "关注影像叙事与生成模型的可控性，长期做短片与品牌视觉。习惯把画面压到低饱和、留一层颗粒，让记忆里的空间自己浮出来。最近在做一组以「归乡」为线索的影像实验。",
   site: "longying.studio",
   social: "@LONGYINGZHANG",
   joined: "2025 年 3 月",
   available: true,
+  orders: 86,
 };
 
 const metrics = [
@@ -39,6 +41,7 @@ const TABS = [
   { key: "work", label: "作品" },
   { key: "course", label: "课程" },
   { key: "task", label: "任务" },
+  { key: "about", label: "关于" },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -81,65 +84,63 @@ export function ProfilePage() {
     }
   };
 
-  return (
-    <div className="uidea-shell px-margin pt-3 pb-24">
-      {/* Toolbar — mirrors Contra's Message / Follow slot */}
-      <div className="mb-6 flex flex-wrap items-center justify-end gap-3">
-        <div className="flex items-center gap-2">
-          {editing ? (
-            <>
-              <button
-                type="button"
-                onClick={cancelEdit}
-                className="ui-btn bg-[#1c1b1b] text-[#c4c7c8] hover:bg-[#222]"
-              >
-                取消
-              </button>
-              <button
-                type="button"
-                onClick={saveEdit}
-                className="ui-btn bg-white text-[#121212] hover:bg-[#dedede]"
-              >
-                保存
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                to="/messages"
-                className="ui-chip bg-[#1c1b1b] text-[#c4c7c8] hover:bg-[#222]"
-              >
-                发消息
-              </Link>
-              <button
-                type="button"
-                onClick={share}
-                className="ui-btn bg-[#1c1b1b] text-[#c4c7c8] hover:bg-[#222]"
-              >
-                分享主页
-              </button>
-              <button
-                type="button"
-                onClick={startEdit}
-                className="ui-btn bg-white text-[#121212] hover:bg-[#dedede]"
-              >
-                编辑资料
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-
-      {toast ? (
-        <div className="ui-text-meta mb-4 inline-flex rounded-[9px] bg-[#1c1b1b] px-3 py-2 text-[#18c98a]">
-          {toast}
-        </div>
-      ) : null}
-
+  /* Message / share / edit — top of the right column; metrics stack below */
+  const actions = (
+    <div className="flex w-full shrink-0 flex-wrap items-center gap-2 sm:w-auto">
       {editing ? (
-        <EditPanel draft={draft} setDraft={setDraft} set={set} />
+        <>
+          <button
+            type="button"
+            onClick={cancelEdit}
+            className="ui-btn bg-[#1c1b1b] text-[#c4c7c8] hover:bg-[#222]"
+          >
+            取消
+          </button>
+          <button
+            type="button"
+            onClick={saveEdit}
+            className="ui-btn bg-white text-[#121212] hover:bg-[#dedede]"
+          >
+            保存
+          </button>
+        </>
       ) : (
-        <ProfileView profile={profile} />
+        <>
+          <Link
+            to="/messages"
+            className="ui-chip bg-[#1c1b1b] text-[#c4c7c8] hover:bg-[#222]"
+          >
+            发消息
+          </Link>
+          <button
+            type="button"
+            onClick={share}
+            className="ui-btn bg-[#1c1b1b] text-[#c4c7c8] hover:bg-[#222]"
+          >
+            分享主页
+          </button>
+          <button
+            type="button"
+            onClick={startEdit}
+            className="ui-btn bg-white text-[#121212] hover:bg-[#dedede]"
+          >
+            编辑资料
+          </button>
+        </>
+      )}
+    </div>
+  );
+
+  return (
+    <div className="pb-24">
+      {editing ? (
+        <div className="uidea-shell px-margin pt-3">
+          {/* Editing keeps the actions on their own row above the form */}
+          <div className="mb-6 flex justify-end">{actions}</div>
+          <EditPanel draft={draft} setDraft={setDraft} set={set} />
+        </div>
+      ) : (
+        <ProfileView profile={profile} toast={toast} />
       )}
     </div>
   );
@@ -147,7 +148,7 @@ export function ProfilePage() {
 
 /* ---------------------------------------------------------------- view */
 
-function ProfileView({ profile }: { profile: Profile }) {
+function ProfileView({ profile, toast }: { profile: Profile; toast: string }) {
   const [tab, setTab] = useState<TabKey>(() => {
     const p = new URLSearchParams(window.location.search).get("tab");
     return p === "course" || p === "task" ? p : "work";
@@ -155,120 +156,148 @@ function ProfileView({ profile }: { profile: Profile }) {
 
   return (
     <>
-      {/* Identity */}
-      <div className="flex flex-col gap-5 pb-7 sm:flex-row sm:items-start sm:gap-6">
-        <div className="h-[88px] w-[88px] shrink-0 overflow-hidden rounded-full bg-[#1c1b1b]">
-          <img src={COVER} alt={profile.name} className="h-full w-full object-cover" />
-        </div>
+      {/*
+        Full-bleed hero — the cover runs edge to edge underneath the
+        avatar / name / stats. It is pulled up by the layout's top padding
+        so it sits flush with the top of the viewport.
+      */}
+      <section
+        aria-label="个人主页封面"
+        className="relative -mt-[calc(var(--spacing-margin)_-_0.5rem)] w-full overflow-hidden bg-[#0a0a0a]"
+      >
+        <img
+          src={COVER}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full scale-[1.02] object-cover object-center brightness-[0.45] saturate-[0.75]"
+        />
+        {/* Even darkening so the type on top always clears contrast */}
+        <div className="absolute inset-0 bg-black/25" aria-hidden="true" />
+        {/* Top scrim — keeps the very first pixels from glowing */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-[32%] bg-gradient-to-b from-black/50 to-transparent"
+        />
+        {/* Bottom fade — the picture sinks into the page background */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 h-[82%] bg-gradient-to-t from-[#131313] via-[#131313]/90 to-transparent"
+        />
 
-        <div className="min-w-0 flex-1">
-          <h1 className="m-0 font-['Space_Grotesk'] text-[28px] font-semibold leading-9 tracking-[-0.02em] text-white sm:text-[32px] sm:leading-10">
-            {profile.name}
-          </h1>
-          <p className="ui-text-meta mt-1 mb-0 text-[#9ea1a2]">
-            @{profile.handle} · {profile.title}
-          </p>
-          <div className="ui-text-meta mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[#747778]">
-            <span>{profile.city}</span>
-            <span>{profile.joined}加入</span>
-            <span
-              className={`inline-flex items-center gap-1.5 ${
-                profile.available ? "text-[#18c98a]" : "text-[#9ea1a2]"
-              }`}
-            >
-              <span
-                className={`h-1.5 w-1.5 rounded-full ${
-                  profile.available ? "bg-[#18c98a]" : "bg-[#66696a]"
-                }`}
-                aria-hidden
-              />
-              {profile.available ? "可接单" : "档期已满"}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex shrink-0 gap-6 sm:gap-8 sm:pt-1">
-          {metrics.map((m) => (
-            <div key={m.label}>
-              <div className="font-['Space_Mono'] text-[14px] font-bold leading-5 tracking-[-0.02em] text-white">
-                {m.value}
-              </div>
-              <div className="ui-text-label mt-0.5 text-[#747778]">{m.label}</div>
+        <div className="uidea-shell relative px-margin pt-7 pb-6 sm:pt-9 sm:pb-8">
+          <div className="flex w-full flex-col items-start">
+            <div className="h-20 w-20 overflow-hidden rounded-full bg-[#1c1b1b] ring-1 ring-white/20">
+              <img src={COVER} alt={profile.name} className="h-full w-full object-cover" />
             </div>
-          ))}
-        </div>
-      </div>
 
-      {/* About — stays above the tab strip */}
-      <section className="mt-7">
-        <SectionTitle>关于</SectionTitle>
-        <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_320px]">
-          <p className="ui-text-body m-0 max-w-[64ch] text-[#c4c7c8]">{profile.bio}</p>
+            <h1 className="mt-4 mb-0 font-['Space_Grotesk'] text-[30px] font-bold leading-[1.15] tracking-[-0.03em] text-white sm:text-[36px]">
+              {profile.name}
+            </h1>
 
-          <div className="rounded-[16px] bg-[#161616] p-4">
-            <dl className="m-0">
-              <DetailRow label="所在地" value={profile.city} />
-              <DetailRow label="个人网站" value={profile.site} />
-              <DetailRow label="社交账号" value={profile.social} />
-              <DetailRow label="加入时间" value={profile.joined} />
-              <DetailRow
-                label="接单状态"
-                value={profile.available ? "可接单" : "档期已满"}
-                accent={profile.available}
-              />
-            </dl>
+            <div className="mt-2 flex flex-col gap-0.5">
+              <p className="ui-text-meta m-0 text-[#dcdad9]">{profile.title}</p>
+              <Link
+                to="/messages"
+                className="ui-text-meta w-fit text-[#9a9c9d] transition-colors hover:text-white"
+              >
+                联系我吧
+              </Link>
+            </div>
+
+            {/* Stats — 作品 / 订单, sitting under the title */}
+            <div className="mt-4 flex items-start gap-8">
+              <div>
+                <div className="font-['Space_Mono'] text-[20px] font-bold leading-6 tracking-[-0.02em] text-white">
+                  {works.length}
+                </div>
+                <div className="ui-text-label mt-1.5 text-white/70">作品</div>
+              </div>
+              <div>
+                <div className="font-['Space_Mono'] text-[20px] font-bold leading-6 tracking-[-0.02em] text-white">
+                  {profile.orders}
+                </div>
+                <div className="ui-text-label mt-1.5 text-white/70">订单</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Tabs — horizontal switch, same slot as Contra's nav row */}
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.07]">
-        <nav
-          className="flex min-w-0 items-center gap-5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          aria-label="个人资料分栏"
-        >
-          {TABS.map((t) => {
-            const on = t.key === tab;
-            return (
-              <button
-                key={t.key}
-                type="button"
-                onClick={() => setTab(t.key)}
-                aria-current={on ? "page" : undefined}
-                className={`ui-text-meta h-11 shrink-0 transition-colors ${
-                  on
-                    ? "font-medium text-white"
-                    : "text-[#747778] hover:text-white"
-                }`}
-              >
-                {t.label}
-              </button>
-            );
-          })}
-        </nav>
+      <div className="uidea-shell px-margin">
+        {toast ? (
+          <div className="ui-text-meta mt-4 inline-flex rounded-[9px] bg-[#1c1b1b] px-3 py-2 text-[#18c98a]">
+            {toast}
+          </div>
+        ) : null}
 
-        <div className="flex shrink-0 items-center gap-3">
-          <span className="ui-text-label flex items-center gap-1.5 text-[#747778]">
-            <PinIcon />
-            {profile.city}
-          </span>
-          <span className="h-3.5 w-px bg-white/10" aria-hidden />
-          <Link
-            to="/designers/longying"
-            aria-label="查看公开主页"
-            className="text-[#9ea1a2] transition-colors hover:text-white"
+        {/* Tabs — plain text row, selected item carries a short underline */}
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+          <nav
+            className="flex min-w-0 items-center gap-5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            aria-label="个人资料分栏"
           >
-            <ArrowUpRightIcon />
-          </Link>
+            {TABS.map((t) => {
+              const on = t.key === tab;
+              return (
+                <button
+                  key={t.key}
+                  type="button"
+                  onClick={() => setTab(t.key)}
+                  aria-current={on ? "page" : undefined}
+                  className={`ui-text-meta relative flex h-9 shrink-0 items-center transition-colors ${
+                    on
+                      ? "font-medium text-white"
+                      : "text-[#747778] hover:text-white"
+                  }`}
+                >
+                  {t.label}
+                  {on ? (
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute bottom-0 left-1/2 h-[3px] w-1/2 -translate-x-1/2 bg-white"
+                    />
+                  ) : null}
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+
+        <div className="pt-6">
+          {tab === "work" ? <WorkPanel /> : null}
+          {tab === "course" ? <CoursePanel /> : null}
+          {tab === "task" ? <TaskPanel /> : null}
+          {tab === "about" ? <ProfileAbout profile={profile} /> : null}
         </div>
       </div>
-
-      <div className="pt-6">
-        {tab === "work" ? <WorkPanel /> : null}
-        {tab === "course" ? <CoursePanel /> : null}
-        {tab === "task" ? <TaskPanel /> : null}
-      </div>
     </>
+  );
+}
+
+/* ----------------------------------------------------------- about */
+
+function ProfileAbout({ profile }: { profile: Profile }) {
+  return (
+    <section>
+      <SectionTitle>关于</SectionTitle>
+      <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_320px]">
+        <p className="ui-text-body m-0 max-w-[64ch] text-[#c4c7c8]">{profile.bio}</p>
+
+        <div className="rounded-[10px] bg-[#161616] p-4">
+          <dl className="m-0">
+            <DetailRow label="所在地" value={profile.city} />
+            <DetailRow label="个人网站" value={profile.site} />
+            <DetailRow label="社交账号" value={profile.social} />
+            <DetailRow label="加入时间" value={profile.joined} />
+            <DetailRow
+              label="接单状态"
+              value={profile.available ? "可接单" : "档期已满"}
+              accent={profile.available}
+            />
+          </dl>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -413,10 +442,10 @@ function WorkPanel() {
                 type="button"
                 onClick={() => setSub(t.key)}
                 aria-current={on ? "page" : undefined}
-                className={`ui-text-meta relative h-9 shrink-0 border-b-2 transition-colors ${
+                className={`ui-text-meta relative h-9 shrink-0 transition-colors ${
                   on
-                    ? "border-white font-medium text-white"
-                    : "border-transparent text-[#747778] hover:text-white"
+                    ? "font-medium text-white"
+                    : "text-[#747778] hover:text-white"
                 }`}
               >
                 {t.label}
@@ -425,7 +454,7 @@ function WorkPanel() {
           })}
         </nav>
 
-        <Link to="/console/works" className="ui-btn ui-btn-primary shrink-0">
+        <Link to="/profile?tab=work" className="ui-btn ui-btn-primary shrink-0">
           <PlusIcon /> 发布作品
         </Link>
       </div>
@@ -508,7 +537,7 @@ function WorkPanel() {
             return (
               <article
                 key={w.id}
-                className="flex min-h-[94px] items-start gap-3 rounded-[16px] bg-[#161616] p-3 transition-colors hover:bg-[#1a1a1a] sm:min-h-[106px]"
+                className="flex min-h-[94px] items-start gap-3 rounded-[10px] bg-[#161616] p-3 transition-colors hover:bg-[#1a1a1a] sm:min-h-[106px]"
               >
                 <Link
                   to={`/works/${w.id}`}
@@ -556,7 +585,7 @@ function WorkPanel() {
                         </button>
                       ) : null}
                       <Link
-                        to="/console/works"
+                        to="/profile?tab=work"
                         className="ui-btn ui-btn-primary min-w-[64px] px-3"
                       >
                         编辑
@@ -852,10 +881,10 @@ function CoursePanel() {
                 type="button"
                 onClick={() => switchSub(t.key)}
                 aria-current={on ? "page" : undefined}
-                className={`ui-text-meta relative h-9 shrink-0 border-b-2 transition-colors ${
+                className={`ui-text-meta relative h-9 shrink-0 transition-colors ${
                   on
-                    ? "border-white font-medium text-white"
-                    : "border-transparent text-[#747778] hover:text-white"
+                    ? "font-medium text-white"
+                    : "text-[#747778] hover:text-white"
                 }`}
               >
                 {t.label}
@@ -963,7 +992,7 @@ function CoursePanel() {
             没有符合条件的报名记录
           </p>
         ) : (
-          <div className="overflow-hidden rounded-[16px] bg-[#161616]">
+          <div className="overflow-hidden rounded-[10px] bg-[#161616]">
             <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.4fr)] gap-3 border-b border-white/[0.07] px-4 py-3">
               {["课程", "用户", "来源", "报名时间"].map((h) => (
                 <span key={h} className="ui-text-label text-[#747778]">
@@ -993,7 +1022,7 @@ function CoursePanel() {
             return (
               <article
                 key={c.id}
-                className="flex min-h-[94px] items-start gap-3 rounded-[16px] bg-[#161616] p-3 transition-colors hover:bg-[#1a1a1a] sm:min-h-[106px]"
+                className="flex min-h-[94px] items-start gap-3 rounded-[10px] bg-[#161616] p-3 transition-colors hover:bg-[#1a1a1a] sm:min-h-[106px]"
               >
                 <CourseThumb course={c} onOpen={() => setDetail(c)} />
 
@@ -1135,7 +1164,7 @@ function CourseDetailModal({ course, onClose }: { course: ManagedCourse; onClose
         aria-modal="true"
         aria-label="课程详情"
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[88vh] w-full max-w-[600px] overflow-y-auto rounded-[16px] border border-[#1f1f1f] bg-[#131313] p-5"
+        className="max-h-[88vh] w-full max-w-[600px] overflow-y-auto rounded-[10px] border border-[#1f1f1f] bg-[#131313] p-5"
       >
         <div className="mb-4 flex items-center justify-between gap-3">
           <span className="ui-text-meta text-[#9ea1a2]">作品详情</span>
@@ -1182,7 +1211,7 @@ function CourseDetailModal({ course, onClose }: { course: ManagedCourse; onClose
           <p className="ui-text-meta mt-2 mb-0 text-[#747778]">地点：印度尼西亚运村</p>
         </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-3 rounded-[12px] bg-[#161616] p-4 sm:grid-cols-4">
+        <div className="mt-4 grid grid-cols-2 gap-3 rounded-[8px] bg-[#161616] p-4 sm:grid-cols-4">
           <div>
             <div className="ui-text-label text-[#747778]">分类</div>
             <div className="mt-1 flex flex-wrap gap-1">
@@ -1214,7 +1243,7 @@ function CourseDetailModal({ course, onClose }: { course: ManagedCourse; onClose
 
         <div className="mt-5">
           <div className="ui-text-label mb-2 text-[#6f7273]">封面</div>
-          <div className="uidea-media max-w-[280px] overflow-hidden rounded-[12px] bg-[#0e0e0e]">
+          <div className="uidea-media max-w-[280px] overflow-hidden rounded-[8px] bg-[#0e0e0e]">
             <img src={course.cover} alt="课程封面" />
           </div>
         </div>
@@ -1224,7 +1253,7 @@ function CourseDetailModal({ course, onClose }: { course: ManagedCourse; onClose
             <div className="ui-text-label text-[#6f7273]">章节列表</div>
             <span className="ui-text-label text-[#66696a]">共 {course.chaptersNum} 章</span>
           </div>
-          <div className="overflow-hidden rounded-[12px] bg-[#161616]">
+          <div className="overflow-hidden rounded-[8px] bg-[#161616]">
             <div className="uidea-media relative bg-[#0e0e0e]">
               <img
                 src={course.cover}
@@ -1279,7 +1308,7 @@ function CreateCourseModal({
         aria-modal="true"
         aria-label="创建课程"
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[88vh] w-full max-w-[640px] overflow-y-auto rounded-[16px] border border-[#1f1f1f] bg-[#131313] p-5"
+        className="max-h-[88vh] w-full max-w-[640px] overflow-y-auto rounded-[10px] border border-[#1f1f1f] bg-[#131313] p-5"
       >
         <div className="mb-4 flex items-center justify-between gap-3">
           <span className="ui-text-meta text-[#9ea1a2]">创建课程</span>
@@ -1398,7 +1427,7 @@ function CreateCourseModal({
 
         <div className="flex flex-col gap-3">
           {chapters.map((ch, i) => (
-            <div key={i} className="rounded-[12px] bg-[#161616] p-3">
+            <div key={i} className="rounded-[8px] bg-[#161616] p-3">
               <div className="mb-1.5 flex items-center justify-between">
                 <span className="ui-text-label text-[#9ea1a2]">章节标题</span>
                 {chapters.length > 1 ? (
@@ -1456,7 +1485,7 @@ function UploadBox({ label, className }: { label: string; className?: string }) 
   return (
     <button
       type="button"
-      className={`flex flex-col items-center justify-center gap-1.5 rounded-[12px] border border-dashed border-[#2f2f2f] bg-[#161616] text-[#9ea1a2] transition-colors hover:border-white/20 hover:text-white ${className ?? ""}`}
+      className={`flex flex-col items-center justify-center gap-1.5 rounded-[8px] border border-dashed border-[#2f2f2f] bg-[#161616] text-[#9ea1a2] transition-colors hover:border-white/20 hover:text-white ${className ?? ""}`}
     >
       <PlusIcon />
       <span className="ui-text-label">{label}</span>
@@ -1732,10 +1761,10 @@ function TaskPanel() {
                 type="button"
                 onClick={() => switchSub(t.key)}
                 aria-current={on ? "page" : undefined}
-                className={`ui-text-meta relative h-9 shrink-0 border-b-2 transition-colors ${
+                className={`ui-text-meta relative h-9 shrink-0 transition-colors ${
                   on
-                    ? "border-white font-medium text-white"
-                    : "border-transparent text-[#747778] hover:text-white"
+                    ? "font-medium text-white"
+                    : "text-[#747778] hover:text-white"
                 }`}
               >
                 {t.label}
@@ -1834,7 +1863,7 @@ function TaskPanel() {
             return (
               <article
                 key={t.id}
-                className="flex min-h-[94px] flex-col justify-between gap-3 rounded-[16px] bg-[#161616] p-3 transition-colors hover:bg-[#1a1a1a] sm:min-h-[106px]"
+                className="flex min-h-[94px] flex-col justify-between gap-3 rounded-[10px] bg-[#161616] p-3 transition-colors hover:bg-[#1a1a1a] sm:min-h-[106px]"
               >
                 <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
                   <div className="flex min-w-0 flex-1 items-center gap-2">
@@ -1907,7 +1936,7 @@ function TaskDetailModal({ task, onClose }: { task: ManagedTask; onClose: () => 
         aria-modal="true"
         aria-label="任务详情"
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[88vh] w-full max-w-[600px] overflow-y-auto rounded-[16px] border border-[#1f1f1f] bg-[#131313] p-5"
+        className="max-h-[88vh] w-full max-w-[600px] overflow-y-auto rounded-[10px] border border-[#1f1f1f] bg-[#131313] p-5"
       >
         {/* Modal header */}
         <div className="mb-4 flex items-center justify-between gap-3">
@@ -1948,7 +1977,7 @@ function TaskDetailModal({ task, onClose }: { task: ManagedTask; onClose: () => 
         </div>
 
         {/* Key numbers */}
-        <div className="mt-4 grid grid-cols-3 gap-3 rounded-[12px] bg-[#161616] p-4">
+        <div className="mt-4 grid grid-cols-3 gap-3 rounded-[8px] bg-[#161616] p-4">
           <div>
             <div className="ui-text-label text-[#747778]">奖励</div>
             <div className="ui-text-meta mt-1 font-['Space_Mono'] text-white">
@@ -1980,7 +2009,7 @@ function TaskDetailModal({ task, onClose }: { task: ManagedTask; onClose: () => 
         {/* Review reference */}
         <div className="mt-5">
           <div className="ui-text-label mb-2 text-[#6f7273]">评审参照图</div>
-          <div className="uidea-media max-w-[280px] overflow-hidden rounded-[12px] bg-[#0e0e0e]">
+          <div className="uidea-media max-w-[280px] overflow-hidden rounded-[8px] bg-[#0e0e0e]">
             <img src={works[0]?.cover ?? COVER} alt="评审参照图" />
           </div>
         </div>
@@ -1989,7 +2018,7 @@ function TaskDetailModal({ task, onClose }: { task: ManagedTask; onClose: () => 
         <div className="mt-6">
           <div className="ui-text-label mb-2 text-[#6f7273]">任务交付</div>
 
-          <div className="mb-3 flex items-center gap-3 rounded-[12px] bg-[#161616] p-3">
+          <div className="mb-3 flex items-center gap-3 rounded-[8px] bg-[#161616] p-3">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#2a2a2a] font-['Space_Grotesk'] text-[13px] text-white">
               {task.companyInitials}
             </span>
@@ -2003,7 +2032,7 @@ function TaskDetailModal({ task, onClose }: { task: ManagedTask; onClose: () => 
 
           <div className="flex flex-col gap-2">
             {DELIVERIES.map((d) => (
-              <div key={d.round} className="rounded-[12px] bg-[#161616] p-3">
+              <div key={d.round} className="rounded-[8px] bg-[#161616] p-3">
                 <div className="flex items-center gap-2">
                   <span className="ui-text-meta text-white">{d.round}</span>
                   <span
@@ -2231,7 +2260,7 @@ function EditPanel({
   return (
     <div className="grid gap-8 lg:grid-cols-[200px_minmax(0,560px)]">
       <div className="flex flex-col gap-3">
-        <div className="uidea-media overflow-hidden rounded-[16px] bg-[#1c1b1b]">
+        <div className="uidea-media overflow-hidden rounded-[10px] bg-[#1c1b1b]">
           <img src={COVER} alt="" className="h-full w-full object-cover" />
         </div>
         <button

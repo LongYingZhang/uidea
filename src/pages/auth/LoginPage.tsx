@@ -15,7 +15,7 @@ export function LoginPage() {
       return;
     }
     localStorage.setItem("uidea.user", email.trim());
-    navigate("/console/profile");
+    navigate("/");
   };
 
   return (
@@ -72,7 +72,7 @@ export function LoginPage() {
         </div>
 
         <p className="ui-text-label mt-10 text-[#5f6364]">
-          原型环境：任意邮箱 + 6 位以上密码即可进入控制台。
+          原型环境：任意邮箱 + 6 位以上密码即可进入社区。
         </p>
       </div>
     </div>

@@ -114,7 +114,7 @@ export function PlazaPage() {
       <div className="mb-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
         <Link
           to="/competitions"
-          className="group relative block aspect-[21/9] overflow-hidden rounded-[16px] bg-[#0e0e0e]"
+          className="group relative block aspect-[21/9] overflow-hidden rounded-[10px] bg-[#0e0e0e]"
         >
           <img
             src={COVER}
@@ -124,7 +124,7 @@ export function PlazaPage() {
         </Link>
         <Link
           to="/vision"
-          className="group relative block aspect-[21/9] overflow-hidden rounded-[16px] bg-[#0e0e0e]"
+          className="group relative block aspect-[21/9] overflow-hidden rounded-[10px] bg-[#0e0e0e]"
         >
           <img
             src={COVER}
@@ -145,7 +145,7 @@ export function PlazaPage() {
         {list.map((w) => (
           <article
             key={w.title}
-            className="uidea-media group relative cursor-pointer overflow-hidden rounded-[16px] bg-[#0e0e0e]"
+            className="uidea-media group relative cursor-pointer overflow-hidden rounded-[10px] bg-[#0e0e0e]"
           >
             {isImageCover(w.cover) ? (
               <img

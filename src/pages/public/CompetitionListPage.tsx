@@ -18,7 +18,7 @@ export function CompetitionListPage() {
             <Link
               key={c.id}
               to={c.id === "ai-love" ? "/competitions/one" : "/competitions/1"}
-              className="group overflow-hidden rounded-[16px] bg-[#1c1b1b] transition-colors hover:bg-[#222]"
+              className="group overflow-hidden rounded-[10px] bg-[#1c1b1b] transition-colors hover:bg-[#222]"
             >
               <div className="relative aspect-[21/9] w-full" style={{ background: c.cover }} aria-hidden>
                 <span

@@ -15,7 +15,7 @@ export function SimpleSiteLayout() {
       <SiteSidebar expanded={expanded} onToggle={toggle} />
 
       <main
-        className="w-full flex-1 transition-[padding] duration-200 ease-out"
+        className="w-full flex-1 pt-[calc(var(--spacing-margin)_-_0.5rem)] transition-[padding] duration-200 ease-out"
         style={{ paddingLeft: padLeft }}
       >
         <Outlet />

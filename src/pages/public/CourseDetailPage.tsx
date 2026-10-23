@@ -14,7 +14,7 @@ export function CourseDetailPage() {
       <div className="mt-5 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="min-w-0">
           <div
-            className="uidea-media rounded-[16px] bg-[#0e0e0e]"
+            className="uidea-media rounded-[10px] bg-[#0e0e0e]"
             style={{
               backgroundImage: `url(${course.cover})`,
               backgroundSize: "cover",
@@ -55,7 +55,7 @@ export function CourseDetailPage() {
           </ol>
         </div>
 
-        <aside className="h-fit rounded-[16px] bg-[#1c1b1b] p-4 lg:sticky lg:top-6">
+        <aside className="h-fit rounded-[10px] bg-[#1c1b1b] p-4 lg:sticky lg:top-6">
           <div className="font-['Space_Mono'] text-[24px] leading-none text-white">
             {course.price}
           </div>

@@ -45,7 +45,7 @@ export function ProductPage() {
           <Link
             key={f.title}
             to={f.to}
-            className="group rounded-[16px] bg-[#1c1b1b] p-5 transition-colors hover:bg-[#222]"
+            className="group rounded-[10px] bg-[#1c1b1b] p-5 transition-colors hover:bg-[#222]"
           >
             <div className="ui-text-body font-medium text-white">{f.title}</div>
             <p className="ui-text-body mt-1.5 mb-0 text-[#a3a3a3]">{f.desc}</p>
@@ -56,7 +56,7 @@ export function ProductPage() {
         ))}
       </div>
 
-      <section className="mt-10 rounded-[16px] bg-[#141414] p-6 sm:p-8">
+      <section className="mt-10 rounded-[10px] bg-[#141414] p-6 sm:p-8">
         <h2 className="ui-text-body m-0 font-medium text-white">关于这个原型</h2>
         <p className="ui-text-body mt-2 mb-0 max-w-[680px] text-[#8a8a8a]">
           当前页面是从设计稿重建的本地原型：左侧导航可收起展开，内容区跟随动画；数据均为示例，不连接真实后端。

@@ -141,6 +141,7 @@
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
+  --radius-2xl: 0.625rem;
   --radius-full: 9999px;
 }
 
@@ -200,7 +201,7 @@
 
     /* Content cards — equal inset on all four sides */
     --uidea-card-pad: 10px;
-    --uidea-card-radius: 16px;
+    --uidea-card-radius: 10px;
   }
 
   /* ≥QHD：内容区随视口变宽，不再锁死窄栏 */
@@ -355,9 +356,15 @@
 
   .ui-chip[aria-selected="true"],
   .ui-chip.is-active {
-    background: #fff;
-    color: #121212;
+    background: var(--color-surface-container-high);
+    color: #f4f4f4;
     font-weight: 600;
+  }
+
+  .ui-chip[aria-selected="true"]:hover,
+  .ui-chip.is-active:hover {
+    background: var(--color-surface-container-highest);
+    color: #fff;
   }
 
   .ui-input {

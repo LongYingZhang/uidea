@@ -41,7 +41,7 @@ export function VisionPage() {
 
       <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s) => (
-          <div key={s.label} className="rounded-[16px] bg-[#1c1b1b] p-4">
+          <div key={s.label} className="rounded-[10px] bg-[#1c1b1b] p-4">
             <div className="font-['Space_Mono'] text-[22px] leading-7 text-white">{s.value}</div>
             <div className="ui-text-label mt-0.5 text-[#747778]">{s.label}</div>
           </div>
@@ -57,7 +57,7 @@ export function VisionPage() {
         ))}
       </div>
 
-      <section className="mt-12 rounded-[16px] border border-[#2a2a2a] p-6 sm:p-8">
+      <section className="mt-12 rounded-[10px] border border-[#2a2a2a] p-6 sm:p-8">
         <h2 className="m-0 text-[18px] font-semibold text-white">加入我们</h2>
         <p className="ui-text-body mt-2 mb-4 max-w-[560px] text-[#a3a3a3]">
           无论你是创作者、品牌方，还是想把这件事做得更好的人，都可以从这里开始。

@@ -10,5 +10,14 @@ export default defineConfig({
     host: "127.0.0.1",
     port: 5273,
     strictPort: true,
+    // 放行部署反向代理域名（线上预览用）
+    allowedHosts: true,
+  },
+  preview: {
+    host: "0.0.0.0",
+    // 部署工具通过 PORT 环境变量注入端口；启动时显式 --port $PORT
+    port: Number(process.env.PORT) || 4173,
+    strictPort: true,
+    allowedHosts: true,
   },
 });

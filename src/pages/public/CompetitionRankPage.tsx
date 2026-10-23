@@ -22,7 +22,7 @@ export function CompetitionRankPage() {
         </span>
       </header>
 
-      <div className="mt-6 overflow-x-auto rounded-[16px] bg-[#1c1b1b]">
+      <div className="mt-6 overflow-x-auto rounded-[10px] bg-[#1c1b1b]">
         <table className="w-full border-collapse text-left">
           <thead>
             <tr className="ui-text-label text-[#747778]">
